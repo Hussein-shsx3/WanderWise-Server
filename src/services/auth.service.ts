@@ -4,6 +4,7 @@ import { generateToken } from "../utils/generateToken";
 import { sendEmail } from "../utils/sendEmail";
 import { generateEmailTemplate } from "../utils/emailTemplate";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 import {
   RegisterDTO,
@@ -181,6 +182,17 @@ export const resetPasswordService = async (data: ResetPasswordDTO) => {
       "INVALID_TOKEN"
     );
 
+  // 🔥 Compare new password with old one
+  const isSamePassword = await bcrypt.compare(newPassword, user.password);
+  if (isSamePassword) {
+    throw new AppError(
+      "New password cannot be the same as the old password",
+      400,
+      "SAME_PASSWORD"
+    );
+  }
+
+  // Update password
   user.password = newPassword;
   user.resetPasswordToken = null;
   user.resetPasswordExpires = null;

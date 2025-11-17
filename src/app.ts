@@ -8,7 +8,9 @@ import rateLimit from "express-rate-limit";
 import { errorHandler, notFound } from "./middleware/errorMiddleware";
 
 // Import routes
-
+import authRoutes from "./routes/auth.routes";
+import userRoutes from "./routes/user.route";
+import itineraryRoutes from "./routes/itinerary.route";
 
 const app: Application = express();
 
@@ -81,7 +83,9 @@ app.get("/api", (req: Request, res: Response) => {
 });
 
 // API Routes
-
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/itineraries", itineraryRoutes);
 
 // 404 Handler - Must be after all routes
 app.use(notFound);

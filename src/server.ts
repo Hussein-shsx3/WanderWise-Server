@@ -1,10 +1,8 @@
-import * as dotenv from "dotenv";
+import "dotenv/config";
 import { Server } from "http";
 import chalk from "chalk";
 import app from "./app";
 import { connectDB, disconnectDB } from "./config/db";
-
-dotenv.config();
 
 // Validate required environment variables
 const requiredEnv = ["MONGODB_URI"];
