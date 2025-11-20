@@ -6,42 +6,85 @@ export const validateRegister = (
   res: Response,
   next: NextFunction
 ): void => {
-  const { firstName, lastName, email, password } = req.body;
+  try {
+    const { firstName, lastName, email, password } = req.body;
 
-  console.log("Register validation - Received body:", req.body);
+    console.log("Register validation - Received body:", {
+      firstName,
+      lastName,
+      email,
+      passwordLength: password?.length,
+    });
 
-  const errors: Record<string, string> = {};
+    // Check if all required fields exist
+    if (!firstName || !lastName || !email || !password) {
+      const missing = [];
+      if (!firstName) missing.push("firstName");
+      if (!lastName) missing.push("lastName");
+      if (!email) missing.push("email");
+      if (!password) missing.push("password");
 
-  if (!firstName || typeof firstName !== "string" || firstName.trim().length < 2) {
-    errors.firstName = "First name is required and must be at least 2 characters";
-  }
-
-  if (!lastName || typeof lastName !== "string" || lastName.trim().length < 2) {
-    errors.lastName = "Last name is required and must be at least 2 characters";
-  }
-
-  if (!email || typeof email !== "string" || !isValidEmail(email)) {
-    errors.email = "Valid email is required";
-  }
-
-  if (!password || typeof password !== "string" || password.length < 6) {
-    errors.password = "Password is required and must be at least 6 characters";
-  }
-
-  if (Object.keys(errors).length > 0) {
-    console.log("Validation failed:", errors);
-    next(
-      new AppError(
-        `Validation failed: ${Object.values(errors).join(", ")}`,
+      throw new AppError(
+        `Missing required fields: ${missing.join(", ")}`,
         400,
-        "VALIDATION_ERROR"
-      )
-    );
-    return;
-  }
+        "MISSING_FIELDS"
+      );
+    }
 
-  console.log("Register validation passed");
-  next();
+    // Convert to strings if needed
+    const firstNameStr = String(firstName).trim();
+    const lastNameStr = String(lastName).trim();
+    const emailStr = String(email).trim().toLowerCase();
+    const passwordStr = String(password);
+
+    // Validate firstName
+    if (firstNameStr.length < 2) {
+      throw new AppError(
+        "First name must be at least 2 characters",
+        400,
+        "INVALID_FIRST_NAME"
+      );
+    }
+
+    // Validate lastName
+    if (lastNameStr.length < 2) {
+      throw new AppError(
+        "Last name must be at least 2 characters",
+        400,
+        "INVALID_LAST_NAME"
+      );
+    }
+
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailStr)) {
+      throw new AppError("Invalid email format", 400, "INVALID_EMAIL");
+    }
+
+    // Validate password
+    if (passwordStr.length < 6) {
+      throw new AppError(
+        "Password must be at least 6 characters",
+        400,
+        "INVALID_PASSWORD"
+      );
+    }
+
+    console.log("Register validation passed");
+    next();
+  } catch (error) {
+    if (error instanceof AppError) {
+      next(error);
+    } else {
+      next(
+        new AppError(
+          error instanceof Error ? error.message : "Validation error",
+          400,
+          "VALIDATION_ERROR"
+        )
+      );
+    }
+  }
 };
 
 export const validateLogin = (
@@ -49,33 +92,44 @@ export const validateLogin = (
   res: Response,
   next: NextFunction
 ): void => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const errors: Record<string, string> = {};
-
-  if (!email || typeof email !== "string" || !isValidEmail(email)) {
-    errors.email = "Valid email is required";
-  }
-
-  if (!password || typeof password !== "string" || password.length < 6) {
-    errors.password = "Password is required";
-  }
-
-  if (Object.keys(errors).length > 0) {
-    next(
-      new AppError(
-        `Validation failed: ${Object.values(errors).join(", ")}`,
+    if (!email || !password) {
+      throw new AppError(
+        "Email and password are required",
         400,
-        "VALIDATION_ERROR"
-      )
-    );
-    return;
+        "MISSING_FIELDS"
+      );
+    }
+
+    const emailStr = String(email).trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(emailStr)) {
+      throw new AppError("Invalid email format", 400, "INVALID_EMAIL");
+    }
+
+    if (String(password).length < 6) {
+      throw new AppError(
+        "Password must be at least 6 characters",
+        400,
+        "INVALID_PASSWORD"
+      );
+    }
+
+    next();
+  } catch (error) {
+    if (error instanceof AppError) {
+      next(error);
+    } else {
+      next(
+        new AppError(
+          error instanceof Error ? error.message : "Validation error",
+          400,
+          "VALIDATION_ERROR"
+        )
+      );
+    }
   }
-
-  next();
-};
-
-const isValidEmail = (email: string): boolean => {
-  const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  return emailRegex.test(email);
 };
