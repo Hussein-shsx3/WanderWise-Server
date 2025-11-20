@@ -116,10 +116,22 @@ export const verifyUserService = async (data: VerifyEmailDTO) => {
   user.verificationTokenExpires = null;
   await user.save();
 
+  // Generate JWT token for auto-login
+  const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, {
+    expiresIn: "1d",
+  });
+
   return {
     success: true,
-    message: "Email verified successfully! You can now login.",
-    user: { id: user._id, email: user.email },
+    message: "Email verified successfully! Welcome to WanderWise!",
+    token: jwtToken,
+    user: {
+      id: user._id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      isVerified: true,
+    },
   };
 };
 
