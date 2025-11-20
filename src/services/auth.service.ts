@@ -21,6 +21,8 @@ import {
 export const registerUserService = async (data: RegisterDTO) => {
   const { firstName, lastName, email, password } = data;
 
+  console.log("Register service - Received:", { firstName, lastName, email, password: "***" });
+
   const existingUser = await User.findOne({ email });
   if (existingUser)
     throw new AppError("Email already exists", 400, "DUPLICATE_KEY");

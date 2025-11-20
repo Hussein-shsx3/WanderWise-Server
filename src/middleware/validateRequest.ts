@@ -8,6 +8,8 @@ export const validateRegister = (
 ): void => {
   const { firstName, lastName, email, password } = req.body;
 
+  console.log("Register validation - Received body:", req.body);
+
   const errors: Record<string, string> = {};
 
   if (!firstName || typeof firstName !== "string" || firstName.trim().length < 2) {
@@ -27,6 +29,7 @@ export const validateRegister = (
   }
 
   if (Object.keys(errors).length > 0) {
+    console.log("Validation failed:", errors);
     next(
       new AppError(
         `Validation failed: ${Object.values(errors).join(", ")}`,
@@ -37,6 +40,7 @@ export const validateRegister = (
     return;
   }
 
+  console.log("Register validation passed");
   next();
 };
 

@@ -4,6 +4,7 @@ exports.validateLogin = exports.validateRegister = void 0;
 const errorMiddleware_1 = require("./errorMiddleware");
 const validateRegister = (req, res, next) => {
     const { firstName, lastName, email, password } = req.body;
+    console.log("Register validation - Received body:", req.body);
     const errors = {};
     if (!firstName || typeof firstName !== "string" || firstName.trim().length < 2) {
         errors.firstName = "First name is required and must be at least 2 characters";
@@ -18,9 +19,11 @@ const validateRegister = (req, res, next) => {
         errors.password = "Password is required and must be at least 6 characters";
     }
     if (Object.keys(errors).length > 0) {
+        console.log("Validation failed:", errors);
         next(new errorMiddleware_1.AppError(`Validation failed: ${Object.values(errors).join(", ")}`, 400, "VALIDATION_ERROR"));
         return;
     }
+    console.log("Register validation passed");
     next();
 };
 exports.validateRegister = validateRegister;

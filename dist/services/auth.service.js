@@ -16,6 +16,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
  */
 const registerUserService = async (data) => {
     const { firstName, lastName, email, password } = data;
+    console.log("Register service - Received:", { firstName, lastName, email, password: "***" });
     const existingUser = await user_model_1.User.findOne({ email });
     if (existingUser)
         throw new errorMiddleware_1.AppError("Email already exists", 400, "DUPLICATE_KEY");
