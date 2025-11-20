@@ -1,8 +1,6 @@
 import { User } from "../models/user.model";
 import { AppError } from "../middleware/errorMiddleware";
 import { generateToken } from "../utils/generateToken";
-import { sendEmail } from "../utils/sendEmail";
-import { generateEmailTemplate } from "../utils/emailTemplate";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
@@ -101,16 +99,6 @@ export const forgotPasswordService = async (data: ForgotPasswordDTO) => {
   user.resetPasswordToken = token;
   user.resetPasswordExpires = expires;
   await user.save();
-
-  const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
-  const url = `${frontendUrl}/reset-password?token=${token}`;
-  const html = generateEmailTemplate(user.firstName, url, "reset");
-  
-  try {
-    await sendEmail(user.email, "Reset Your WanderWise Password", html);
-  } catch (emailError) {
-    console.error("Email sending failed:", emailError);
-  }
 
   return { success: true, message: "Password reset email sent" };
 };
