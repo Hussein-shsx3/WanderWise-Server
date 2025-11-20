@@ -1,11 +1,11 @@
 export interface CreateItineraryDTO {
   destination: string;
-  startDate: string; // ISO date string
-  endDate: string; // ISO date string
+  startDate: string; 
+  endDate: string; 
   budget?: number;
   travelStyle?: "budget" | "comfort" | "luxury";
   preferences?: string[];
-  useAI?: boolean; // whether to generate itinerary with AI
+  useAI?: boolean; 
 }
 
 export interface UpdateItineraryDTO {

@@ -14,11 +14,6 @@ import {
 import { CreateItineraryDTO, GenerateItineraryDTO } from "../dtos/itinerary.dto";
 import { IActivity } from "../types/itinerary.type";
 
-/**
- * @desc Create a new itinerary
- * @route POST /api/v1/itineraries
- * @access Private
- */
 export const createItinerary = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -29,11 +24,6 @@ export const createItinerary = asyncHandler(
   }
 );
 
-/**
- * @desc Generate AI-powered itinerary
- * @route POST /api/v1/itineraries/generate
- * @access Private
- */
 export const generateAIItinerary = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -44,11 +34,6 @@ export const generateAIItinerary = asyncHandler(
   }
 );
 
-/**
- * @desc Get all itineraries for the user
- * @route GET /api/v1/itineraries
- * @access Private
- */
 export const getUserItineraries = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -57,11 +42,6 @@ export const getUserItineraries = asyncHandler(
   }
 );
 
-/**
- * @desc Get a specific itinerary
- * @route GET /api/v1/itineraries/:id
- * @access Private
- */
 export const getItinerary = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -72,11 +52,6 @@ export const getItinerary = asyncHandler(
   }
 );
 
-/**
- * @desc Update itinerary
- * @route PUT /api/v1/itineraries/:id
- * @access Private
- */
 export const updateItinerary = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -88,11 +63,6 @@ export const updateItinerary = asyncHandler(
   }
 );
 
-/**
- * @desc Add activity to a day in itinerary
- * @route POST /api/v1/itineraries/:id/days/:dayNumber/activities
- * @access Private
- */
 export const addActivity = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -109,11 +79,6 @@ export const addActivity = asyncHandler(
   }
 );
 
-/**
- * @desc Update activity in a day
- * @route PUT /api/v1/itineraries/:id/days/:dayNumber/activities/:activityId
- * @access Private
- */
 export const updateActivity = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -131,11 +96,6 @@ export const updateActivity = asyncHandler(
   }
 );
 
-/**
- * @desc Delete activity from a day
- * @route DELETE /api/v1/itineraries/:id/days/:dayNumber/activities/:activityId
- * @access Private
- */
 export const deleteActivity = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
@@ -151,11 +111,6 @@ export const deleteActivity = asyncHandler(
   }
 );
 
-/**
- * @desc Delete itinerary
- * @route DELETE /api/v1/itineraries/:id
- * @access Private
- */
 export const deleteItinerary = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
